@@ -21,31 +21,14 @@ export default function App() {
     return () => document.head.removeChild(style)
   }, [])
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const key = input.trim()
     if (!key.startsWith('sk-ant-')) {
       setError('That doesn\'t look like a valid Anthropic API key. It should start with sk-ant-')
       return
     }
-    setTesting(true)
-    setError('')
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] }),
-      })
-      if (res.ok || res.status === 400) {
-        localStorage.setItem(KEY_STORAGE, key)
-        setApiKey(key)
-      } else {
-        setError('API key rejected. Please check it and try again.')
-      }
-    } catch (e) {
-      setError('Could not verify key — please check your connection and try again.')
-    } finally {
-      setTesting(false)
-    }
+    localStorage.setItem(KEY_STORAGE, key)
+    setApiKey(key)
   }
 
   const handleClear = () => {
